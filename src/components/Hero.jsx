@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Calendar, Users, ChevronDown, Sparkles, MapPin, Star } from 'lucide-react';
+import { Users, ChevronDown, Sparkles, MapPin, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { animate } from 'animejs';
+import { DatePickerField } from './ui/date-picker';
+import { Button } from './ui/button';
 
 export default function Hero({ onOpenBooking }) {
   const [checkIn, setCheckIn] = useState('');
@@ -10,7 +12,6 @@ export default function Hero({ onOpenBooking }) {
   const badgeRef = useRef(null);
 
   useEffect(() => {
-    // Subtle float animation on badge using Anime.js v4
     if (badgeRef.current) {
       animate(badgeRef.current, {
         translateY: [-4, 4],
@@ -32,14 +33,11 @@ export default function Hero({ onOpenBooking }) {
     const targetElement = document.querySelector('#about');
     if (!targetElement) return;
 
-    if (window.lenis) {
-      window.lenis.scrollTo(targetElement, { offset: -90, duration: 1.2 });
-    } else {
-      window.scrollTo({
-        top: targetElement.getBoundingClientRect().top + window.pageYOffset - 90,
-        behavior: 'smooth',
-      });
-    }
+    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 90;
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth',
+    });
   };
 
   return (
@@ -112,86 +110,77 @@ export default function Hero({ onOpenBooking }) {
           transition={{ duration: 0.6, delay: 0.7 }}
           className="flex flex-col sm:flex-row items-center gap-4 mb-12 w-full sm:w-auto"
         >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <Button
+            variant="gold"
+            size="lg"
             onClick={() => onOpenBooking()}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#C9A24B] hover:bg-[#A88232] text-[#0B2545] font-bold text-base px-8 py-4 rounded-full shadow-2xl transition-all duration-300 cursor-pointer"
+            className="w-full sm:w-auto text-[#0B2545]"
           >
             <Sparkles className="w-5 h-5 text-[#0B2545]" />
             <span>Book Your Stay</span>
-          </motion.button>
+          </Button>
 
           <a
             href="#about"
             onClick={smoothScrollToAbout}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 font-medium text-base px-8 py-4 rounded-full transition-all duration-300"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 font-medium text-base px-8 py-3.5 rounded-full transition-all duration-300"
           >
             <span>Explore Resort</span>
             <ChevronDown className="w-5 h-5" />
           </a>
         </motion.div>
 
-        {/* Quick Booking Bar */}
+        {/* Dark Luxury Availability Search Bar */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.9 }}
-          className="w-full max-w-4xl bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-4 sm:p-6 border border-[#C9A24B]/30 text-left text-slate-800"
+          className="w-full max-w-4xl bg-[#0B2545]/90 backdrop-blur-xl rounded-3xl shadow-2xl p-4 sm:p-6 border border-[#C9A24B]/40 text-left text-white"
         >
           <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-            <div>
-              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#2C7DA0]" /> Check-In
-              </label>
-              <input
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2C7DA0]"
-                min={new Date().toISOString().split('T')[0]}
-              />
-            </div>
+            
+            {/* Styled Dark Check-In Date */}
+            <DatePickerField
+              id="hero-check-in"
+              label="Check-In Date"
+              value={checkIn}
+              onChange={(e) => setCheckIn(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#2C7DA0]" /> Check-Out
-              </label>
-              <input
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2C7DA0]"
-                min={checkIn || new Date().toISOString().split('T')[0]}
-              />
-            </div>
+            {/* Styled Dark Check-Out Date */}
+            <DatePickerField
+              id="hero-check-out"
+              label="Check-Out Date"
+              value={checkOut}
+              onChange={(e) => setCheckOut(e.target.value)}
+              min={checkIn || new Date().toISOString().split('T')[0]}
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-[#2C7DA0]" /> Guests
+            {/* Dark Guests Select */}
+            <div className="flex flex-col gap-1.5 w-full">
+              <label className="text-xs font-semibold text-[#C9A24B] uppercase tracking-wider flex items-center gap-1.5 font-sans">
+                <Users className="w-3.5 h-3.5 text-[#C9A24B] shrink-0" /> Guests
               </label>
               <select
                 value={guests}
                 onChange={(e) => setGuests(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2C7DA0]"
+                className="w-full min-h-[48px] bg-[#0B2545] hover:bg-[#133863] border border-[#C9A24B]/40 focus:border-[#C9A24B] focus:ring-2 focus:ring-[#C9A24B]/30 rounded-xl px-3.5 py-2.5 text-sm font-medium text-white transition-all duration-200 outline-none cursor-pointer"
               >
-                <option value="1 Guest">1 Adult</option>
-                <option value="2 Guests">2 Adults (Couple)</option>
-                <option value="3 Guests">3 Adults</option>
-                <option value="4+ Family">Family (2 Adults + Kids)</option>
+                <option value="1 Guest" className="bg-[#0B2545] text-white">1 Adult</option>
+                <option value="2 Guests" className="bg-[#0B2545] text-white">2 Adults (Couple)</option>
+                <option value="3 Guests" className="bg-[#0B2545] text-white">3 Adults</option>
+                <option value="4+ Family" className="bg-[#0B2545] text-white">Family (2 Adults + Kids)</option>
               </select>
             </div>
 
-            <div>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                className="w-full bg-[#0B2545] hover:bg-[#133863] text-white font-semibold text-sm py-2.5 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
-              >
+            {/* Search Button */}
+            <div className="w-full">
+              <Button type="submit" variant="gold" className="w-full min-h-[48px] text-sm text-[#0B2545]">
                 <span>Check Rates</span>
-              </motion.button>
+              </Button>
             </div>
+
           </form>
         </motion.div>
       </div>

@@ -23,6 +23,31 @@
   }
 }
 
+/* Luxury Dark Mode Date Picker Input Styling */
+input[type="date"],
+.dark-date-input {
+  color-scheme: dark !important;
+  font-family: var(--font-sans);
+  background-color: #0B2545;
+  color: #FFFFFF;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+.dark-date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.7) sepia(1) saturate(5) hue-rotate(350deg);
+  opacity: 0.9;
+  padding: 4px;
+  border-radius: 6px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+.dark-date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
