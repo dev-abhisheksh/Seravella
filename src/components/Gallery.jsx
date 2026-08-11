@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Maximize2, X, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Gallery() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -95,7 +96,13 @@ export default function Gallery() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-12"
+        >
           <span className="text-xs sm:text-sm font-semibold tracking-widest text-[#2C7DA0] uppercase block mb-2 font-sans">
             Visual Journey
           </span>
@@ -106,7 +113,7 @@ export default function Gallery() {
           <p className="text-base sm:text-lg text-slate-600 font-light">
             Take a glance at the captivating beauty, sunlit oceanfront vistas, and timeless luxury waiting for you at Seravella.
           </p>
-        </div>
+        </motion.div>
 
         {/* Category Filter Chips */}
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-12">
@@ -126,87 +133,98 @@ export default function Gallery() {
         </div>
 
         {/* Image Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredItems.map((item, idx) => (
-            <div
-              key={item.id}
-              onClick={() => openLightbox(idx)}
-              className="group relative h-72 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer border border-white/60"
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0B2545]/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                <span className="text-[10px] text-[#C9A24B] font-extrabold uppercase tracking-widest font-sans mb-1 flex items-center gap-1">
-                  <Camera className="w-3 h-3" /> {item.title}
-                </span>
-                <p className="text-xs text-white/90 font-light">{item.caption}</p>
-                <div className="mt-3 inline-flex items-center gap-1 text-xs text-[#C9A24B] font-semibold">
-                  <Maximize2 className="w-3.5 h-3.5" /> Enlarge
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <AnimatePresence>
+            {filteredItems.map((item, idx) => (
+              <motion.div
+                layout
+                key={item.id}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.4 }}
+                onClick={() => openLightbox(idx)}
+                className="group relative h-72 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer border border-white/60"
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B2545]/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                  <span className="text-[10px] text-[#C9A24B] font-extrabold uppercase tracking-widest font-sans mb-1 flex items-center gap-1">
+                    <Camera className="w-3 h-3" /> {item.title}
+                  </span>
+                  <p className="text-xs text-white/90 font-light">{item.caption}</p>
+                  <div className="mt-3 inline-flex items-center gap-1 text-xs text-[#C9A24B] font-semibold">
+                    <Maximize2 className="w-3.5 h-3.5" /> Enlarge
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
 
       </div>
 
       {/* Lightbox Modal */}
-      {lightboxIndex !== null && (
-        <div
-          onClick={closeLightbox}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 sm:p-8"
-        >
-          {/* Close Button */}
-          <button
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={closeLightbox}
-            className="absolute top-6 right-6 text-white/80 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-50 cursor-pointer"
-            aria-label="Close image modal"
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 sm:p-8"
           >
-            <X className="w-7 h-7" />
-          </button>
+            <button
+              onClick={closeLightbox}
+              className="absolute top-6 right-6 text-white/80 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-50 cursor-pointer"
+              aria-label="Close image modal"
+            >
+              <X className="w-7 h-7" />
+            </button>
 
-          {/* Prev Button */}
-          <button
-            onClick={prevImage}
-            className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-50 cursor-pointer"
-            aria-label="Previous image"
-          >
-            <ChevronLeft className="w-8 h-8" />
-          </button>
+            <button
+              onClick={prevImage}
+              className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-50 cursor-pointer"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-8 h-8" />
+            </button>
 
-          {/* Image & Caption Display */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="max-w-4xl w-full flex flex-col items-center justify-center"
-          >
-            <img
-              src={filteredItems[lightboxIndex].image}
-              alt={filteredItems[lightboxIndex].title}
-              className="max-h-[75vh] w-auto object-contain rounded-2xl shadow-2xl border border-white/20"
-            />
-            <div className="mt-4 text-center">
-              <h3 className="font-serif text-xl sm:text-2xl font-bold text-white mb-1">
-                {filteredItems[lightboxIndex].title}
-              </h3>
-              <p className="text-sm text-amber-200/90 font-light">
-                {filteredItems[lightboxIndex].caption}
-              </p>
-            </div>
-          </div>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-4xl w-full flex flex-col items-center justify-center"
+            >
+              <img
+                src={filteredItems[lightboxIndex].image}
+                alt={filteredItems[lightboxIndex].title}
+                className="max-h-[75vh] w-auto object-contain rounded-2xl shadow-2xl border border-white/20"
+              />
+              <div className="mt-4 text-center">
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white mb-1">
+                  {filteredItems[lightboxIndex].title}
+                </h3>
+                <p className="text-sm text-amber-200/90 font-light">
+                  {filteredItems[lightboxIndex].caption}
+                </p>
+              </div>
+            </motion.div>
 
-          {/* Next Button */}
-          <button
-            onClick={nextImage}
-            className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-50 cursor-pointer"
-            aria-label="Next image"
-          >
-            <ChevronRight className="w-8 h-8" />
-          </button>
-        </div>
-      )}
+            <button
+              onClick={nextImage}
+              className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-50 cursor-pointer"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-8 h-8" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

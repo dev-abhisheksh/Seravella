@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Tag, Heart, Calendar, Plane, Sparkles, Gift, CheckCircle } from 'lucide-react';
+import React from 'react';
+import { Tag, Heart, Calendar, Plane, Gift, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Offers({ onClaimOffer }) {
-  const [activeTab, setActiveTab] = useState('all');
-
   const offers = [
     {
       id: 'honeymoon',
@@ -51,14 +50,28 @@ export default function Offers({ onClaimOffer }) {
     },
   ];
 
-  const filteredOffers = activeTab === 'all' ? offers : offers.filter(o => o.category === activeTab);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+  };
+
+  const offerVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: 30 },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
 
   return (
-    <section id="offers" className="py-20 md:py-28 bg-[#0B2545] text-white relative">
+    <section id="offers" className="py-20 md:py-28 bg-[#0B2545] text-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-12"
+        >
           <span className="text-xs sm:text-sm font-semibold tracking-widest text-[#C9A24B] uppercase block mb-2 font-sans">
             Exclusive Packages
           </span>
@@ -69,15 +82,23 @@ export default function Offers({ onClaimOffer }) {
           <p className="text-base sm:text-lg text-gray-300 font-light">
             Enhance your luxury retreat in Goa with our handpicked promotional offers and direct booking bonuses.
           </p>
-        </div>
+        </motion.div>
 
         {/* Offers Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {filteredOffers.map((offer) => {
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"
+        >
+          {offers.map((offer) => {
             const Icon = offer.icon;
             return (
-              <div
+              <motion.div
                 key={offer.id}
+                variants={offerVariants}
+                whileHover={{ y: -6 }}
                 className="bg-[#133863]/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-[#C9A24B]/30 hover:border-[#C9A24B] transition-all duration-300 shadow-xl flex flex-col justify-between relative group"
               >
                 {/* Badge */}
@@ -115,18 +136,20 @@ export default function Offers({ onClaimOffer }) {
                   <div className="text-xs text-gray-400">
                     Promo Code: <code className="text-[#C9A24B] font-mono font-bold bg-[#0B2545] px-2 py-1 rounded">{offer.code}</code>
                   </div>
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => onClaimOffer(offer)}
-                    className="w-full sm:w-auto bg-[#C9A24B] hover:bg-[#A88232] text-[#0B2545] font-bold text-xs px-5 py-2.5 rounded-xl shadow-md hover:scale-105 transition-all cursor-pointer"
+                    className="w-full sm:w-auto bg-[#C9A24B] hover:bg-[#A88232] text-[#0B2545] font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all cursor-pointer"
                   >
                     Claim Offer
-                  </button>
+                  </motion.button>
                 </div>
 
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
       </div>
     </section>

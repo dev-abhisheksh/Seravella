@@ -1,5 +1,6 @@
 import React from 'react';
 import { Wifi, Tv, Coffee, ShieldCheck, Sparkles, Eye, ArrowRight, UserCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Rooms({ onSelectRoom }) {
   const roomsData = [
@@ -51,12 +52,28 @@ export default function Rooms({ onSelectRoom }) {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
+
   return (
     <section id="rooms" className="py-20 md:py-28 bg-[#F5EDE0] text-slate-800 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <span className="text-xs sm:text-sm font-semibold tracking-widest text-[#2C7DA0] uppercase block mb-2 font-sans">
             Accommodations
           </span>
@@ -67,13 +84,21 @@ export default function Rooms({ onSelectRoom }) {
           <p className="text-base sm:text-lg text-slate-600 font-light">
             Designed for serene rest, equipped with premium linen, panoramic views, and refined Goan coastal aesthetics.
           </p>
-        </div>
+        </motion.div>
 
         {/* Room Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+        >
           {roomsData.map((room) => (
-            <div
+            <motion.div
               key={room.id}
+              variants={cardVariants}
+              whileHover={{ y: -10 }}
               className={`bg-white rounded-2xl overflow-hidden shadow-lg border hover:shadow-2xl transition-all duration-300 flex flex-col justify-between relative group ${
                 room.popular ? 'border-[#C9A24B] ring-2 ring-[#C9A24B]/30' : 'border-slate-200'
               }`}
@@ -141,19 +166,21 @@ export default function Rooms({ onSelectRoom }) {
                     </div>
                   </div>
 
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => onSelectRoom(room)}
                     className="w-full bg-[#0B2545] hover:bg-[#C9A24B] text-white hover:text-[#0B2545] font-semibold text-sm py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>View Details & Book</span>
                     <ArrowRight className="w-4 h-4" />
-                  </button>
+                  </motion.button>
                 </div>
               </div>
 
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
       </div>
     </section>

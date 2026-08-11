@@ -1,5 +1,6 @@
 import React from 'react';
 import { BedDouble, Utensils, Sparkles, Waves, SunMedium, PartyPopper, Clock, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Services({ onSelectService }) {
   const servicesList = [
@@ -54,6 +55,27 @@ export default function Services({ onSelectService }) {
     },
   ];
 
+  const scrollToRooms = (e) => {
+    e.preventDefault();
+    const targetElement = document.querySelector('#rooms');
+    if (!targetElement) return;
+
+    window.scrollTo({
+      top: targetElement.getBoundingClientRect().top + window.pageYOffset - 80,
+      behavior: 'smooth',
+    });
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 35 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
+
   return (
     <section id="services" className="py-20 md:py-28 bg-[#0B2545] text-white relative overflow-hidden">
       {/* Decorative Subtle Glow */}
@@ -63,7 +85,13 @@ export default function Services({ onSelectService }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <span className="text-xs sm:text-sm font-semibold tracking-widest text-[#C9A24B] uppercase block mb-2 font-sans">
             Curated Experiences
           </span>
@@ -74,15 +102,23 @@ export default function Services({ onSelectService }) {
           <p className="text-base sm:text-lg text-gray-300 font-light">
             Every detail at Seravella is thoughtfully crafted to pamper your senses and deliver an effortless 5-star luxury experience.
           </p>
-        </div>
+        </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {servicesList.map((service) => {
             const Icon = service.icon;
             return (
-              <div
+              <motion.div
                 key={service.id}
+                variants={cardVariants}
+                whileHover={{ y: -8 }}
                 className="group relative bg-[#133863]/60 backdrop-blur-md rounded-2xl overflow-hidden border border-[#C9A24B]/20 hover:border-[#C9A24B] transition-all duration-500 shadow-xl flex flex-col justify-between"
               >
                 {/* Background Image Preview Header */}
@@ -113,16 +149,17 @@ export default function Services({ onSelectService }) {
 
                   <a
                     href="#rooms"
+                    onClick={scrollToRooms}
                     className="inline-flex items-center gap-2 text-xs font-semibold text-[#C9A24B] hover:text-white transition-colors uppercase tracking-wider group/link"
                   >
                     <span>Learn More</span>
                     <ChevronRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                   </a>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
       </div>
     </section>

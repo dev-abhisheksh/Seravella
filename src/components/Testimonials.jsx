@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, Quote } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Testimonials() {
   const reviews = [
@@ -32,12 +33,28 @@ export default function Testimonials() {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 35 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  };
+
   return (
-    <section className="py-20 md:py-28 bg-[#0B2545] text-white relative">
+    <section className="py-20 md:py-28 bg-[#0B2545] text-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <span className="text-xs sm:text-sm font-semibold tracking-widest text-[#C9A24B] uppercase block mb-2 font-sans">
             Guest Testimonials
           </span>
@@ -45,13 +62,21 @@ export default function Testimonials() {
             Stories from Our Guests
           </h2>
           <div className="w-20 h-1 bg-[#C9A24B] mx-auto mb-6 rounded-full" />
-        </div>
+        </motion.div>
 
         {/* Testimonials Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           {reviews.map((rev) => (
-            <div
+            <motion.div
               key={rev.id}
+              variants={cardVariants}
+              whileHover={{ y: -6 }}
               className="bg-[#133863]/60 backdrop-blur-md rounded-2xl p-8 border border-[#C9A24B]/20 hover:border-[#C9A24B] transition-all duration-300 shadow-xl flex flex-col justify-between"
             >
               <div>
@@ -83,9 +108,9 @@ export default function Testimonials() {
                 </div>
               </div>
 
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
       </div>
     </section>
