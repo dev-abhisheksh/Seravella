@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Users, CheckCircle, Sparkles, Phone, Mail, User, ShieldCheck } from 'lucide-react';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 
 export default function BookingModal({ isOpen, onClose, selectedRoom, selectedOffer, initialData }) {
   const [checkIn, setCheckIn] = useState('');
@@ -9,7 +11,6 @@ export default function BookingModal({ isOpen, onClose, selectedRoom, selectedOf
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [specialRequest, setSpecialRequest] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const roomPrices = {
@@ -35,7 +36,6 @@ export default function BookingModal({ isOpen, onClose, selectedRoom, selectedOf
   const currentRoom = roomPrices[roomType] || roomPrices['ocean-view'];
   const baseRate = currentRoom.price;
 
-  // Calculate nights
   let nightCount = 1;
   if (checkIn && checkOut) {
     const d1 = new Date(checkIn);
@@ -46,7 +46,6 @@ export default function BookingModal({ isOpen, onClose, selectedRoom, selectedOf
     }
   }
 
-  // Discount calculation
   let discountPercent = 0;
   if (selectedOffer) {
     if (selectedOffer.code === 'HONEYMOON25') discountPercent = 25;
@@ -56,7 +55,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoom, selectedOf
   const rawSubtotal = baseRate * nightCount;
   const discountAmount = (rawSubtotal * discountPercent) / 100;
   const subtotal = rawSubtotal - discountAmount;
-  const taxGst = subtotal * 0.18; // 18% GST for 5-star hotel
+  const taxGst = subtotal * 0.18;
   const grandTotal = subtotal + taxGst;
 
   const handleSubmit = (e) => {
@@ -128,12 +127,9 @@ export default function BookingModal({ isOpen, onClose, selectedRoom, selectedOf
               A confirmation email & SMS has been sent with your booking ID <strong className="text-[#0B2545]">#SERA-{Math.floor(100000 + Math.random() * 900000)}</strong>. Our concierge will contact you shortly for airport transfer options.
             </p>
 
-            <button
-              onClick={handleReset}
-              className="bg-[#0B2545] hover:bg-[#133863] text-white font-semibold text-sm px-8 py-3 rounded-xl shadow-md transition-all cursor-pointer"
-            >
+            <Button variant="default" size="lg" onClick={handleReset}>
               Done
-            </button>
+            </Button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
@@ -141,7 +137,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoom, selectedOf
             {selectedOffer && (
               <div className="bg-[#C9A24B]/10 border border-[#C9A24B] p-3 rounded-xl flex items-center justify-between text-xs text-[#0B2545]">
                 <span className="font-semibold">Applied Offer: {selectedOffer.title} ({selectedOffer.discount})</span>
-                <span className="font-mono bg-[#C9A24B] text-[#0B2545] px-2 py-0.5 rounded font-bold">{selectedOffer.code}</span>
+                <Badge variant="goldSolid">{selectedOffer.code}</Badge>
               </div>
             )}
 
@@ -282,12 +278,9 @@ export default function BookingModal({ isOpen, onClose, selectedRoom, selectedOf
             </div>
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full bg-[#0B2545] hover:bg-[#C9A24B] text-white hover:text-[#0B2545] font-bold text-base py-4 rounded-xl shadow-xl transition-all duration-300 cursor-pointer"
-            >
+            <Button variant="default" size="lg" type="submit" className="w-full hover:bg-[#C9A24B] hover:text-[#0B2545]">
               Confirm Reservation
-            </button>
+            </Button>
           </form>
         )}
 

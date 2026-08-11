@@ -1,6 +1,9 @@
 import React from 'react';
-import { Wifi, Tv, Coffee, ShieldCheck, Sparkles, Eye, ArrowRight, UserCheck } from 'lucide-react';
+import { Sparkles, ArrowRight, UserCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './ui/card';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 
 export default function Rooms({ onSelectRoom }) {
   const roomsData = [
@@ -86,7 +89,7 @@ export default function Rooms({ onSelectRoom }) {
           </p>
         </motion.div>
 
-        {/* Room Cards Grid */}
+        {/* Room Cards Grid using Shadcn Components */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -95,58 +98,59 @@ export default function Rooms({ onSelectRoom }) {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {roomsData.map((room) => (
-            <motion.div
-              key={room.id}
-              variants={cardVariants}
-              whileHover={{ y: -10 }}
-              className={`bg-white rounded-2xl overflow-hidden shadow-lg border hover:shadow-2xl transition-all duration-300 flex flex-col justify-between relative group ${
-                room.popular ? 'border-[#C9A24B] ring-2 ring-[#C9A24B]/30' : 'border-slate-200'
-              }`}
-            >
-              {/* Badges */}
-              {room.popular && (
-                <div className="absolute top-4 right-4 z-10 bg-[#C9A24B] text-[#0B2545] text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-md flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" /> Most Popular
-                </div>
-              )}
-              {room.luxuryBadge && (
-                <div className="absolute top-4 right-4 z-10 bg-[#0B2545] text-[#C9A24B] border border-[#C9A24B] text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
-                  ★ Flagship Villa
-                </div>
-              )}
+            <motion.div key={room.id} variants={cardVariants} whileHover={{ y: -10 }}>
+              <Card
+                className={`overflow-hidden h-full flex flex-col justify-between relative group ${
+                  room.popular ? 'border-[#C9A24B] ring-2 ring-[#C9A24B]/30 shadow-xl' : 'border-slate-200'
+                }`}
+              >
+                {/* Badges */}
+                {room.popular && (
+                  <div className="absolute top-4 right-4 z-10">
+                    <Badge variant="goldSolid">
+                      <Sparkles className="w-3 h-3" /> Most Popular
+                    </Badge>
+                  </div>
+                )}
+                {room.luxuryBadge && (
+                  <div className="absolute top-4 right-4 z-10">
+                    <Badge variant="default" className="border border-[#C9A24B] text-[#C9A24B]">
+                      ★ Flagship Villa
+                    </Badge>
+                  </div>
+                )}
 
-              {/* Room Image Container */}
-              <div className="relative h-60 overflow-hidden">
-                <img
-                  src={room.image}
-                  alt={room.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                
-                {/* Size & Occupancy Tag */}
-                <div className="absolute bottom-3 left-3 text-white text-xs font-medium flex items-center gap-3">
-                  <span className="bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/20">
-                    {room.size}
-                  </span>
-                  <span className="bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/20 flex items-center gap-1">
-                    <UserCheck className="w-3 h-3 text-[#C9A24B]" /> {room.occupancy}
-                  </span>
+                {/* Room Image Container */}
+                <div className="relative h-60 overflow-hidden">
+                  <img
+                    src={room.image}
+                    alt={room.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  
+                  <div className="absolute bottom-3 left-3 text-white text-xs font-medium flex items-center gap-3">
+                    <span className="bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/20">
+                      {room.size}
+                    </span>
+                    <span className="bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/20 flex items-center gap-1">
+                      <UserCheck className="w-3 h-3 text-[#C9A24B]" /> {room.occupancy}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Room Details */}
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-serif text-xl font-bold text-[#0B2545] mb-2 group-hover:text-[#2C7DA0] transition-colors">
+                {/* Card Body */}
+                <CardHeader className="pb-3">
+                  <CardTitle className="group-hover:text-[#2C7DA0] transition-colors">
                     {room.name}
-                  </h3>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-4 line-clamp-2 font-light">
+                  </CardTitle>
+                  <CardDescription className="line-clamp-2">
                     {room.description}
-                  </p>
+                  </CardDescription>
+                </CardHeader>
 
-                  {/* Amenities List */}
-                  <div className="space-y-1.5 mb-6 border-t border-b border-slate-100 py-3">
+                <CardContent className="pb-4">
+                  <div className="space-y-1.5 border-t border-b border-slate-100 py-3">
                     {room.features.map((feat, idx) => (
                       <div key={idx} className="flex items-center gap-2 text-xs text-slate-700">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#C9A24B]" />
@@ -154,11 +158,10 @@ export default function Rooms({ onSelectRoom }) {
                       </div>
                     ))}
                   </div>
-                </div>
+                </CardContent>
 
-                {/* Price & Action */}
-                <div>
-                  <div className="flex items-baseline justify-between mb-4">
+                <CardFooter className="flex-col items-stretch pt-0">
+                  <div className="flex items-baseline justify-between mb-4 w-full">
                     <div>
                       <span className="text-xs text-slate-400 block font-sans uppercase tracking-wider">Starting at</span>
                       <span className="font-serif text-2xl font-bold text-[#0B2545]">{room.formattedPrice}</span>
@@ -166,18 +169,17 @@ export default function Rooms({ onSelectRoom }) {
                     </div>
                   </div>
 
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  <Button
+                    variant="default"
                     onClick={() => onSelectRoom(room)}
-                    className="w-full bg-[#0B2545] hover:bg-[#C9A24B] text-white hover:text-[#0B2545] font-semibold text-sm py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full hover:bg-[#C9A24B] hover:text-[#0B2545]"
                   >
                     <span>View Details & Book</span>
                     <ArrowRight className="w-4 h-4" />
-                  </motion.button>
-                </div>
-              </div>
+                  </Button>
+                </CardFooter>
 
+              </Card>
             </motion.div>
           ))}
         </motion.div>
