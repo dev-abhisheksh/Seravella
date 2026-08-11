@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Lenis from 'lenis';
 import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -19,6 +20,32 @@ export default function App() {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [initialBookingData, setInitialBookingData] = useState(null);
+
+  // Initialize Lenis Inertial Smooth Scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+    });
+
+    // Expose lenis globally for smooth anchor navigation
+    window.lenis = lenis;
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+      delete window.lenis;
+    };
+  }, []);
 
   const handleOpenBooking = (initialData = null) => {
     setSelectedRoom(null);
@@ -53,10 +80,10 @@ export default function App() {
       {/* Initial Page Load Creative Animation */}
       <Preloader onComplete={() => setIsLoaded(true)} />
 
-      {/* Main Website Content revealed smoothly after preloader finishes */}
+      {/* Main Website Content */}
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 15 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoaded ? 1 : 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* Sticky Header Navbar */}

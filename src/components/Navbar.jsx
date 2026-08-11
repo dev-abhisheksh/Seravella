@@ -21,11 +21,14 @@ export default function Navbar({ onOpenBooking }) {
     const targetElement = document.querySelector(targetId);
     if (!targetElement) return;
 
-    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 90;
-    window.scrollTo({
-      top: targetPosition,
-      behavior: 'smooth',
-    });
+    if (window.lenis) {
+      window.lenis.scrollTo(targetElement, { offset: -90, duration: 1.2 });
+    } else {
+      window.scrollTo({
+        top: targetElement.getBoundingClientRect().top + window.pageYOffset - 90,
+        behavior: 'smooth',
+      });
+    }
   };
 
   const navLinks = [

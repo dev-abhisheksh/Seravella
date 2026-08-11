@@ -32,11 +32,14 @@ export default function Hero({ onOpenBooking }) {
     const targetElement = document.querySelector('#about');
     if (!targetElement) return;
 
-    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-    window.scrollTo({
-      top: targetPosition,
-      behavior: 'smooth',
-    });
+    if (window.lenis) {
+      window.lenis.scrollTo(targetElement, { offset: -90, duration: 1.2 });
+    } else {
+      window.scrollTo({
+        top: targetElement.getBoundingClientRect().top + window.pageYOffset - 90,
+        behavior: 'smooth',
+      });
+    }
   };
 
   return (
