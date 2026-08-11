@@ -12,9 +12,10 @@
 }
 
 @layer base {
-  html {
+  html, body {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+    background-color: #0B2545;
   }
 
   h1, h2, h3, h4, h5, h6 {

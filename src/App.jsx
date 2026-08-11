@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -12,6 +14,7 @@ import BookingModal from './components/BookingModal';
 import Footer from './components/Footer';
 
 export default function App() {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
@@ -47,46 +50,56 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F5EDE0] text-slate-800 font-sans selection:bg-[#C9A24B] selection:text-white">
-      {/* Sticky Header Navbar */}
-      <Navbar onOpenBooking={() => handleOpenBooking()} />
+      {/* Initial Page Load Creative Animation */}
+      <Preloader onComplete={() => setIsLoaded(true)} />
 
-      <main>
-        {/* Hero Section */}
-        <Hero onOpenBooking={handleOpenBooking} />
+      {/* Main Website Content revealed smoothly after preloader finishes */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 15 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {/* Sticky Header Navbar */}
+        <Navbar onOpenBooking={() => handleOpenBooking()} />
 
-        {/* About Section */}
-        <About />
+        <main>
+          {/* Hero Section */}
+          <Hero onOpenBooking={handleOpenBooking} />
 
-        {/* Services Section */}
-        <Services onSelectService={() => handleOpenBooking()} />
+          {/* About Section */}
+          <About />
 
-        {/* Vision & Mission Section */}
-        <VisionMission />
+          {/* Services Section */}
+          <Services onSelectService={() => handleOpenBooking()} />
 
-        {/* Rooms & Pricing Section */}
-        <Rooms onSelectRoom={handleSelectRoom} />
+          {/* Vision & Mission Section */}
+          <VisionMission />
 
-        {/* Special Offers Section */}
-        <Offers onClaimOffer={handleClaimOffer} />
+          {/* Rooms & Pricing Section */}
+          <Rooms onSelectRoom={handleSelectRoom} />
 
-        {/* Gallery Section with Lightbox */}
-        <Gallery />
+          {/* Special Offers Section */}
+          <Offers onClaimOffer={handleClaimOffer} />
 
-        {/* Testimonials Section */}
-        <Testimonials />
-      </main>
+          {/* Gallery Section with Lightbox */}
+          <Gallery />
 
-      {/* Footer Section */}
-      <Footer onOpenBooking={() => handleOpenBooking()} />
+          {/* Testimonials Section */}
+          <Testimonials />
+        </main>
 
-      {/* Interactive Reservation Booking Modal */}
-      <BookingModal
-        isOpen={isBookingOpen}
-        onClose={handleCloseBooking}
-        selectedRoom={selectedRoom}
-        selectedOffer={selectedOffer}
-        initialData={initialBookingData}
-      />
+        {/* Footer Section */}
+        <Footer onOpenBooking={() => handleOpenBooking()} />
+
+        {/* Interactive Reservation Booking Modal */}
+        <BookingModal
+          isOpen={isBookingOpen}
+          onClose={handleCloseBooking}
+          selectedRoom={selectedRoom}
+          selectedOffer={selectedOffer}
+          initialData={initialBookingData}
+        />
+      </motion.div>
     </div>
   );
 }
