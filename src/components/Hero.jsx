@@ -9,19 +9,6 @@ export default function Hero({ onOpenBooking }) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState('2 Guests');
-  const badgeRef = useRef(null);
-
-  useEffect(() => {
-    if (badgeRef.current) {
-      animate(badgeRef.current, {
-        translateY: [-4, 4],
-        duration: 3000,
-        direction: 'alternate',
-        loop: true,
-        ease: 'inOutSine',
-      });
-    }
-  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -57,7 +44,6 @@ export default function Hero({ onOpenBooking }) {
         
         {/* Rating & Location Tag */}
         <motion.div
-          ref={badgeRef}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
